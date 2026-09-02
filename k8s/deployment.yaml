@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: novohearth-homes-site
+  labels:
+    app: novohearth-homes-site
+spec:
+  replicas: 2 # run 2 pods
+  selector:
+    matchLabels:
+      app: novohearth-homes-site
+  strategy:
+    type: RollingUpdate # default, safe rollouts
+  template:
+    metadata:
+      labels:
+        app: novohearth-homes-site
+    spec:
+      containers:
+        - name: web
+          image: nimbusacrivqmz.azurecr.io/novohearth-homes-site:v1 # your ACR image
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources: # tiny but realistic
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 15
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: novohearth-homes-site
+  labels:
+    app: novohearth-homes-site
+spec:
+  type: LoadBalancer # gives you a public IP on AKS
+  selector:
+    app: novohearth-homes-site
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
