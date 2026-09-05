@@ -8,12 +8,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
     name       = "default"
     node_count = var.aks_node_count
     vm_size    = var.aks_vm_size
-
-    upgrade_settings {
-      max_surge                     = "10%"
-      drain_timeout_in_minutes      = 0
-      node_soak_duration_in_minutes = 0
-    }
   }
 
   node_provisioning_profile {
@@ -22,13 +16,6 @@ resource "azurerm_kubernetes_cluster" "aks" {
 
   identity {
     type = "SystemAssigned"
-  }
-
-  role_based_access_control_enabled = true
-
-  azure_active_directory_role_based_access_control {
-    tenant_id          = data.azurerm_client_config.current.tenant_id
-    azure_rbac_enabled = true
   }
 
   tags = var.tags
