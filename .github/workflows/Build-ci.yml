@@ -32,6 +32,9 @@ jobs:
 
     - name: Get AKS Credentials
       run: az aks get-credentials --resource-group ${{ secrets.AZURERESOURCEGROUP }} --name ${{ secrets.AZURECLUSTERNAME }}
+    - name: Install kubelogin
+      run: az aks install-cli
+          
 
     - name: Deploy to AKS
       run: |
