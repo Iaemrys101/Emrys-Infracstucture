@@ -1,0 +1,9 @@
+{
+  "name": "github-emrys-main",
+  "issuer": "https://token.actions.githubusercontent.com",
+  "subject": "repo:Iaemrys101/Emrys-Infracstucture:ref:refs/heads/main",
+  "description": "GitHub Actions deployments from main",
+  "audiences": [
+    "api://AzureADTokenExchange"
+  ]
+}
