@@ -30,10 +30,14 @@ jobs:
     - name: Push Docker Image to ACR
       run: docker push ${{ env.IMAGE }}  
 
-    - name: Get AKS Credentials
-      run: az aks get-credentials --resource-group ${{ secrets.AZURERESOURCEGROUP }} --name ${{ secrets.AZURECLUSTERNAME }}
     - name: Install kubelogin
       run: az aks install-cli
+    
+    - name: Get AKS Credentials
+      run: |
+          az aks get-credentials --resource-group ${{ secrets.AZURERESOURCEGROUP }} --name ${{ secrets.AZURECLUSTERNAME }}
+          kubelogin convert-kubeconfig -l azurecli
+    
           
 
     - name: Deploy to AKS
