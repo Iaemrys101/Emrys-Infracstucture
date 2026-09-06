@@ -32,3 +32,27 @@ contactForm.addEventListener("submit", (event) => {
   formStatus.textContent = `Thanks, ${name}. This practice form is working.`;
   contactForm.reset();
 });
+
+const filters = document.querySelector('#property-filters');
+const maxPrice = document.querySelector('#max-price');
+const minBeds = document.querySelector('#min-beds');
+const cards = [...document.querySelectorAll('.listing-card')];
+const results = document.querySelector('#listing-results');
+const empty = document.querySelector('#listing-empty');
+function updateListings() {
+  const budget = maxPrice.value === '' ? Infinity : Number(maxPrice.value);
+  const bedrooms = Number(minBeds.value);
+  let count = 0;
+  cards.forEach(card => {
+    card.hidden = Number(card.dataset.price) > budget || Number(card.dataset.beds) < bedrooms;
+    if (!card.hidden) count++;
+  });
+  results.textContent = count === cards.length ? 'Showing all ' + count + ' homes' : 'Showing ' + count + ' of ' + cards.length + ' homes';
+  empty.hidden = count !== 0;
+}
+filters.hidden = false;
+filters.addEventListener('change', updateListings);
+filters.addEventListener('submit', event => event.preventDefault());
+filters.addEventListener('reset', () => { setTimeout(updateListings, 0); });
+document.querySelector('#empty-reset').addEventListener('click', () => { filters.reset(); maxPrice.focus(); });
+updateListings();

@@ -32,12 +32,12 @@
   <main>
     <section class="hero" id="home" aria-label="Novohearth Homes introduction">
       <div class="hero-content">
-        <p class="eyebrow">Residential Real Estate</p>
-        <h1>Novohearth Homes</h1>
-        <p class="hero-copy">Helping families, first-time buyers, and property investors move with calm confidence.</p>
+        <p class="eyebrow">Welcome to Novohearth Homes</p>
+        <h1>Find your<br>next chapter<span class="hero-dot">.</span></h1>
+        <p class="hero-copy">From your first set of keys to a little more room to grow. Explore homes that fit your life, your plans, and your next chapter.</p>
         <div class="hero-actions">
-          <a class="button primary" href="#listings">View Homes</a>
-          <a class="button secondary" href="#contact">Book a Visit</a>
+          <a class="button primary" href="#listings">Explore properties</a>
+          <a class="button secondary" href="#contact">Book a viewing</a>
         </div>
       </div>
     </section>
@@ -61,40 +61,42 @@
       <div class="section-heading">
         <p class="eyebrow">Featured Listings</p>
         <h2>Homes ready for a fresh start</h2>
-        <p>Practice editing these cards by changing prices, locations, images, and property details.</p>
+        <p>More space, a fresh outlook, a place to call yours. Find your favourites in our collection.</p>
       </div>
 
+      <form class="property-filters" id="property-filters" hidden aria-label="Filter properties">
+        <label for="max-price">Your budget<select id="max-price"><option value="">Any price</option><option value="400000">Up to £400,000</option><option value="550000">Up to £550,000</option><option value="750000">Up to £750,000</option><option value="900000">Up to £900,000</option></select></label>
+        <label for="min-beds">Room to grow<select id="min-beds"><option value="0">Any bedrooms</option><option value="2">2+ bedrooms</option><option value="3">3+ bedrooms</option><option value="4">4+ bedrooms</option><option value="5">5+ bedrooms</option></select></label>
+        <button class="button filter-reset" type="reset">Clear filters</button>
+      </form>
+      <p class="listing-results" id="listing-results" role="status" aria-live="polite">Showing all 6 homes</p>
       <div class="listing-grid">
-        <article class="listing-card">
-          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=80" alt="Modern family house with a bright front yard">
-          <div class="listing-body">
-            <p class="price">£485,000</p>
-            <h3>Willow Crest Residence</h3>
-            <p>4 beds | 3 baths | 2,180 sq ft</p>
-            <span>Lakeview District</span>
-          </div>
+        <article class="listing-card" data-price="485000" data-beds="4">
+          <div class="listing-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=80" alt="Modern family house with a bright front yard"><span class="listing-badge">Featured</span></div>
+          <div class="listing-body"><p class="price">£485,000</p><h3>Willow Crest Residence</h3><p>4 beds | 3 baths | 2,180 sq ft</p><span>Lakeview District</span></div>
         </article>
-
-        <article class="listing-card">
-          <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=80" alt="White suburban home with a clean front lawn">
-          <div class="listing-body">
-            <p class="price">£620,000</p>
-            <h3>Maple Row Estate</h3>
-            <p>5 beds | 4 baths | 3,040 sq ft</p>
-            <span>North Meadow</span>
-          </div>
+        <article class="listing-card" data-price="620000" data-beds="5">
+          <div class="listing-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=80" alt="White suburban home with a front lawn"><span class="listing-badge">Open house</span></div>
+          <div class="listing-body"><p class="price">£620,000</p><h3>Maple Row Estate</h3><p>5 beds | 4 baths | 3,040 sq ft</p><span>North Meadow</span></div>
         </article>
-
-        <article class="listing-card">
-          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" alt="Contemporary home with large windows and warm exterior lighting">
-          <div class="listing-body">
-            <p class="price">£735,000</p>
-            <h3>Cedar Point Villa</h3>
-            <p>4 beds | 3.5 baths | 2,760 sq ft</p>
-            <span>Riverside Heights</span>
-          </div>
+        <article class="listing-card" data-price="735000" data-beds="4">
+          <div class="listing-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" alt="Contemporary home with large windows"><span class="listing-badge">Featured</span></div>
+          <div class="listing-body"><p class="price">£735,000</p><h3>Cedar Point Villa</h3><p>4 beds | 3.5 baths | 2,760 sq ft</p><span>Riverside Heights</span></div>
+        </article>
+        <article class="listing-card" data-price="345000" data-beds="2">
+          <div class="listing-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=80" alt="Bright contemporary home interior"><span class="listing-badge">New listing</span></div>
+          <div class="listing-body"><p class="price">£345,000</p><h3>The Garden Retreat</h3><p>2 beds | 2 baths | 1,120 sq ft</p><span>Willow Park</span></div>
+        </article>
+        <article class="listing-card" data-price="550000" data-beds="3">
+          <div class="listing-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=80" alt="Detached home surrounded by greenery"><span class="listing-badge">New listing</span></div>
+          <div class="listing-body"><p class="price">£550,000</p><h3>Oakwood House</h3><p>3 beds | 2 baths | 1,850 sq ft</p><span>Westbrook</span></div>
+        </article>
+        <article class="listing-card" data-price="895000" data-beds="5">
+          <div class="listing-photo"><img loading="lazy" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80" alt="Spacious contemporary home with garden"><span class="listing-badge">Featured</span></div>
+          <div class="listing-body"><p class="price">£895,000</p><h3>The Riverside Collection</h3><p>5 beds | 4 baths | 3,600 sq ft</p><span>Riverside Heights</span></div>
         </article>
       </div>
+      <div class="listing-empty" id="listing-empty" hidden><h3>A different combination could be the one.</h3><p>Try a higher budget or fewer bedrooms to see more homes.</p><button class="button filter-reset" id="empty-reset" type="button">Show all homes</button></div>
     </section>
 
     <section class="section split" id="services">
@@ -196,7 +198,7 @@
       <img src="assets/logo.svg" alt="" class="brand-logo">
       <span>Novohearth Homes</span>
     </a>
-    <p>Static practice website. Built with HTML, CSS, and JavaScript.</p>
+    <p>Portfolio demonstration · All properties and testimonials are illustrative.</p>
   </footer>
 
   <script src="app.js"></script>
