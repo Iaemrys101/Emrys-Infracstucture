@@ -23,7 +23,7 @@ jobs:
 
     - name: Build Docker Image
       run: |
-          IMAGE=nimbusacrivqmz.azurecr.io/novohearth-homes-site:${{ github.sha }}
+          IMAGE=${{ secrets.AZURECONTAINERREGISTRY }}/novohearth-homes-site:${{ github.sha }}
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV
           docker build -t $IMAGE ./Novohearth-Homes-site
 
