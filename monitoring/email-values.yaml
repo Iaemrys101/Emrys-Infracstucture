@@ -1,0 +1,31 @@
+alertmanager:
+  alertmanagerSpec:
+    secrets:
+      - gmail-smtp
+
+  config:
+    global:
+      resolve_timeout: 5m
+      smtp_smarthost: 'smtp.gmail.com:587'
+      smtp_from: 'nwachukwuemmanuel938@gmail.com'
+      smtp_auth_username: 'nwachukwuemmanuel938@gmail.com'
+      smtp_auth_password_file: /etc/alertmanager/secrets/gmail-smtp/password
+      smtp_require_tls: true
+
+    route:
+      receiver: 'null'
+      group_by: ['namespace', 'alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 4h
+      routes:
+        - receiver: gmail
+          matchers:
+            - 'alertname=~"NovohearthUnavailable|EmailDeliveryTest"'
+
+    receivers:
+      - name: 'null'
+      - name: gmail
+        email_configs:
+          - to: 'nwachukwuemmanuel938@gmail.com'
+            send_resolved: true

@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: email-delivery-test
+  namespace: monitoring
+  labels:
+    release: kps
+spec:
+  groups:
+    - name: email-delivery-test
+      rules:
+        - alert: EmailDeliveryTest
+          expr: vector(1)
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Test email from AKS Alertmanager"
+            description: "Your Prometheus email notification test is working."
