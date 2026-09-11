@@ -6,6 +6,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     
     steps:
     - name: Checkout code
@@ -14,7 +17,10 @@ jobs:
     - name: Azure Login
       uses: azure/login@v2
       with:
-       creds: ${{ secrets.AZURECREDENTIALS }}
+        # Public identifiers for the existing GitHub OIDC identity.
+        client-id: ba3ad5f5-1183-4fb4-b29d-2e658d5b3dbc
+        tenant-id: e3ec2f73-0d86-485d-b4aa-bfac95aa8803
+        subscription-id: 895f6afd-c1e3-4c48-a6d4-b2528ea3d817
 
     - name: Azure CLI version
       run: az version 
@@ -42,8 +48,8 @@ jobs:
 
     - name: Deploy to AKS
       run: |
-         kubectl set image deployment/novohearth-homes-site web=${{ env.IMAGE }}
-         kubectl rollout status deployment/novohearth-homes-site
+         kubectl --namespace default set image deployment/novohearth-homes-site web=${{ env.IMAGE }}
+         kubectl --namespace default rollout status deployment/novohearth-homes-site --timeout=300s
 
 
           
