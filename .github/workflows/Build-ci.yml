@@ -47,7 +47,9 @@ jobs:
           docker push "$IMAGE"
 
       - name: Install kubectl and kubelogin
-        run: az aks install-cli
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: az aks install-cli --gh-token "$GH_TOKEN"
 
       - name: Get AKS connection configuration
         run: |
