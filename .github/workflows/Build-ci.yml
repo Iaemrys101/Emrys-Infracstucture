@@ -25,7 +25,7 @@ jobs:
     - name: Azure CLI version
       run: az version 
     - name: Login to ACR
-      run: az acr login --name nimbusacrivqmz
+      run: az acr login --name nimbusacrkocx2
 
     - name: Build Docker Image
       run: |
