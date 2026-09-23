@@ -90,6 +90,9 @@ jobs:
             deployment/novohearth-homes-site \
             --namespace default \
             --timeout=300s
+          
+          kubectl apply --namespace default -f k8s/service.yaml
+           kubectl get service novohearth-homes-site --namespace default
 
       - name: Remove temporary federation token
         if: always()
