@@ -1,59 +1,95 @@
 name: CI/CD to AKS
+
 on:
   push:
     branches:
       - main
+
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    
+
+    env:
+      AZURE_CLIENT_ID: ba3ad5f5-1183-4fb4-b29d-2e658d5b3dbc
+      AZURE_TENANT_ID: e3ec2f73-0d86-485d-b4aa-bfac95aa8803
+      AZURE_SUBSCRIPTION_ID: 895f6afd-c1e3-4c48-a6d4-b2528ea3d817
+      AZURE_AUTHORITY_HOST: https://login.microsoftonline.com/
+      ACR_NAME: nimbusacrkocx2
+      ACR_LOGIN_SERVER: nimbusacrkocx2.azurecr.io
+      AKS_RESOURCE_GROUP: nimbus-rg
+      AKS_NAME: nimbus-aks
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Azure Login
-      uses: azure/login@v2
-      with:
-        # Public identifiers for the existing GitHub OIDC identity.
-        client-id: ba3ad5f5-1183-4fb4-b29d-2e658d5b3dbc
-        tenant-id: e3ec2f73-0d86-485d-b4aa-bfac95aa8803
-        subscription-id: 895f6afd-c1e3-4c48-a6d4-b2528ea3d817
+      - name: Azure login with GitHub OIDC
+        uses: azure/login@v2
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
 
-    - name: Azure CLI version
-      run: az version 
-    - name: Login to ACR
-      run: az acr login --name nimbusacrkocx2
+      - name: Login to ACR
+        run: az acr login --name "$ACR_NAME"
 
-    - name: Build Docker Image
-      run: |
-          IMAGE=${{ secrets.AZURECONTAINERREGISTRY }}/novohearth-homes-site:${{ github.sha }}
-          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
-          docker build -t $IMAGE ./Novohearth-Homes-site
+      - name: Build and push Docker image
+        shell: bash
+        run: |
+          set -euo pipefail
+          IMAGE="$ACR_LOGIN_SERVER/novohearth-homes-site:$GITHUB_SHA"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+          docker build -t "$IMAGE" ./Novohearth-Homes-site
+          docker push "$IMAGE"
 
-    - name: Push Docker Image to ACR
-      run: docker push ${{ env.IMAGE }}  
+      - name: Install kubectl and kubelogin
+        run: az aks install-cli
 
-    - name: Install kubelogin
-      run: az aks install-cli
-    
-    - name: Get AKS Credentials
-      run: |
-          az aks get-credentials --resource-group ${{ secrets.AZURERESOURCEGROUP }} --name ${{ secrets.AZURECLUSTERNAME }}
-          kubelogin convert-kubeconfig -l azurecli
-    
-          
+      - name: Get AKS connection configuration
+        run: |
+          az aks get-credentials \
+            --resource-group "$AKS_RESOURCE_GROUP" \
+            --name "$AKS_NAME" \
+            --overwrite-existing
 
-    - name: Deploy to AKS
-      run: |
-         kubectl --namespace default set image deployment/novohearth-homes-site web=${{ env.IMAGE }}
-         kubectl --namespace default rollout status deployment/novohearth-homes-site --timeout=300s
+      - name: Prepare direct GitHub OIDC authentication for Kubernetes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const token = await core.getIDToken('api://AzureADTokenExchange');
+            core.setSecret(token);
+            const tokenPath = path.join(
+              process.env.RUNNER_TEMP,
+              'aks-federated-token'
+            );
+            fs.writeFileSync(tokenPath, token, { mode: 0o600 });
+            core.exportVariable('AZURE_FEDERATED_TOKEN_FILE', tokenPath);
 
+      - name: Deploy to AKS
+        shell: bash
+        run: |
+          set -euo pipefail
 
-          
+          kubelogin convert-kubeconfig -l workloadidentity
 
+          kubectl set image \
+            -f k8s/deployment.yaml \
+            web="$IMAGE" \
+            --local -o yaml |
+            kubectl apply --namespace default -f -
 
-      
-      
+          kubectl rollout status \
+            deployment/novohearth-homes-site \
+            --namespace default \
+            --timeout=300s
+
+      - name: Remove temporary federation token
+        if: always()
+        shell: bash
+        run: rm -f "$RUNNER_TEMP/aks-federated-token"
