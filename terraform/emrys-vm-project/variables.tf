@@ -52,3 +52,20 @@ variable "storage_account_prefix" {
     error_message = "The Storage Account prefix must contain only lowercase letters and numbers."
   }
 }
+
+variable "admin_username" {
+  description = "Administrator username for the Linux VMs."
+  type        = string
+  default     = "azureadmin"
+}
+
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key used by the Linux VMs."
+  type        = string
+}
+
+variable "vm_size" {
+  description = "Azure size used by the Linux VMs."
+  type        = string
+  default     = "Standard_D2als_v6"
+}

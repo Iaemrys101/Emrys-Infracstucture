@@ -18,3 +18,7 @@ private_endpoint_subnet_name             = "snet-private-endpoints-dev-uks-001"
 private_endpoint_subnet_address_prefixes = ["10.20.2.0/24"]
 
 storage_account_prefix = "stemrysdev"
+
+ssh_public_key_path = "~/.ssh/emrys-vm.pub"
+
+vm_size = "Standard_D2als_v6"
