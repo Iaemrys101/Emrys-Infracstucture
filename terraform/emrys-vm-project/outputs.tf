@@ -17,3 +17,15 @@ output "subnet_id" {
   description = "Resource ID used when connecting VM network interfaces."
   value       = azurerm_subnet.workload.id
 }
+
+output "storage_account_name" {
+  value = azurerm_storage_account.emrys.name
+}
+
+output "storage_blob_endpoint" {
+  value = azurerm_storage_account.emrys.primary_blob_endpoint
+}
+
+output "storage_private_endpoint_ip" {
+  value = azurerm_private_endpoint.storage_blob.private_service_connection[0].private_ip_address
+}
