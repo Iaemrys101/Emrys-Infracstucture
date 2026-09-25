@@ -1,0 +1,20 @@
+location            = "uksouth"
+resource_group_name = "rg-emrys-dev-uks-001"
+
+vnet_name          = "vnet-emrys-dev-uks-001"
+vnet_address_space = ["10.20.0.0/16"]
+
+subnet_name             = "snet-workload-dev-uks-001"
+subnet_address_prefixes = ["10.20.1.0/24"]
+
+tags = {
+  environment = "dev"
+  owner       = "emrys-infrastructure"
+  project     = "vm-platform"
+  managed_by  = "terraform"
+}
+
+private_endpoint_subnet_name             = "snet-private-endpoints-dev-uks-001"
+private_endpoint_subnet_address_prefixes = ["10.20.2.0/24"]
+
+storage_account_prefix = "stemrysdev"
